@@ -1,0 +1,42 @@
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guard/jwt.auth.guard';
+import { ProdQueryDto } from './dto/prodQuery.dto';
+import { ProductsService } from './products.service';
+import RolesGuard from 'src/auth/guard/role.guard';
+import { ProductDTO } from './dto/products.dto';
+import { Role } from 'src/auth/decorator/role.decorator';
+import { UpdateProductsDTO } from './dto/updateProduct.dto';
+
+@UseGuards(JwtAuthGuard)
+@Controller('products')
+export class ProductsController {
+    constructor(private productService: ProductsService){}
+    @Get()
+    async getProductsWithFilters(@Query() prodQuery: ProdQueryDto){
+        return await this.productService.getProducts(prodQuery);
+    }
+
+    @Get(":id")
+    async getProductById(@Param() id: string){
+        return await this.productService.getProductById(id);
+    }
+
+    @UseGuards(RolesGuard)
+    @Role('admin')
+    @Post()
+    async createNewProduct(@Body() body: ProductDTO){
+        return await this.productService.createProduct(body);
+    }
+
+    @UseGuards(RolesGuard)
+    @Role('admin')
+    @Patch()
+    async updateProduct(@Body() body: UpdateProductsDTO){
+        return await this.productService.updateProduct(body);
+    }
+    @UseGuards(RolesGuard)
+    @Role('admin')
+    async deleteProduct(@Param() id: string){
+        return await this.productService.deleteProduct(id);
+    }
+}
