@@ -21,7 +21,7 @@ export class ProductsService {
         if (error) throw new NotImplementedException("Cannot create product");
         return data;
     }
-    async updateProduct(dto: UpdateProductsDTO){
+    async updateProduct(id: string, dto: UpdateProductsDTO){
         const {data, error}=await this.supabaseService.getClient().from("products").update({
             name: dto.name,
             description: dto.description,
@@ -29,7 +29,7 @@ export class ProductsService {
             category_id: dto.category_id,
             photo: dto.photo,
             customer_id: dto.customer_id
-        }).eq('id',dto.id)
+        }).eq('id',id)
         if (error) throw new NotImplementedException("Cannot update product");
         return data;
     }
@@ -37,9 +37,19 @@ export class ProductsService {
         return await this.supabaseService.getClient().from("products").delete().eq('id',id);
     }
     async getProducts(filter: ProdQueryDto){
-        const {name, description, category_id, customer_id}=filter;
-        const {data, error}=await this.supabaseService.getClient().from("products").select('*');
-        if (error) throw new NotFoundException("Cannot get products")
+        const {name, category_id, customer_id}=filter;
+        let query=this.supabaseService.getClient().from("products").select('*');
+        if(name){
+            query=query.ilike("name",`${name}`)
+        }
+        if(category_id){
+            query=query.eq("category_id",`${category_id}`)
+        }
+        if(customer_id){
+            query=query.eq("customer_id",`${customer_id}`)
+        }
+        const {data, error}=await query;
+        if (error) throw new NotFoundException("Cannot get products"+error.message);
         return data;
     }
     async getProductById(id: string){

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.auth.guard';
 import { ProdQueryDto } from './dto/prodQuery.dto';
 import { ProductsService } from './products.service';
@@ -31,11 +31,13 @@ export class ProductsController {
     @UseGuards(RolesGuard)
     @Role('admin')
     @Patch()
-    async updateProduct(@Body() body: UpdateProductsDTO){
-        return await this.productService.updateProduct(body);
+    @Put(":id")
+    async updateProduct(@Param() id: string, @Body() body: UpdateProductsDTO){
+        return await this.productService.updateProduct(id, body);
     }
     @UseGuards(RolesGuard)
     @Role('admin')
+    @Delete(":id")
     async deleteProduct(@Param() id: string){
         return await this.productService.deleteProduct(id);
     }

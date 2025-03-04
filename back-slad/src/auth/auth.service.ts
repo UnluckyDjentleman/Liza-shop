@@ -49,7 +49,7 @@ export class AuthService {
             console.log(error);
             throw new UnauthorizedException("Authorization failed")
         }
-        return this.generateToken(data.user.email, data.user.id,);
+        return this.generateToken(data.user.email, data.user.id);
     }
 
     async assignRole(userId: string, role: string) {

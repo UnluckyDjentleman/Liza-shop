@@ -3,6 +3,4 @@ import { ProductDTO } from "./products.dto";
 import { IsUUID } from "class-validator";
 
 export class UpdateProductsDTO extends PartialType(ProductDTO){
-    @IsUUID()
-    id: string
 }
