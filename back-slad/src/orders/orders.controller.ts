@@ -38,4 +38,14 @@ export class OrdersController {
     async getOrder(@GetUser() user, @Param('id') id: number){
         return await this.orderService.getOrderById(user,id);
     }
+
+    @Get("my-orders")
+    async getMyOrders(@GetUser() user){
+        return await this.orderService.getUserOrders(user);
+    }
+
+    @Get("all-orders")
+    async getAllOrders(@GetUser() user){
+        return await this.orderService.getAllOrders(user);
+    }
 }
