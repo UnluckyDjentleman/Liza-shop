@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { GetUser } from 'src/auth/decorator/auth.decorator';
 import { Role } from 'src/auth/decorator/role.decorator';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.auth.guard';
@@ -17,19 +17,25 @@ export class OrdersController {
     @Role('user')
     @Post()
     async setOrder(@GetUser() user, @Body() dto: OrderDTO){
-        await this.orderService.addOrder(user,dto);
+        return await this.orderService.addOrder(user,dto);
     }
 
     @UseGuards(RolesGuard)
     @Role('user')
     @Patch(":id")
-    async updateOrder(@GetUser() user, @Param() id:number, @Body()dto: UpdateOrderDTO){
-        await this.orderService.updateOrder(user, id, dto)
+    async updateOrder(@GetUser() user, @Param('id') id:number, @Body()dto: UpdateOrderDTO){
+        return await this.orderService.updateOrder(user, id, dto)
     }
     @UseGuards(RolesGuard)
     @Role('user')
     @Delete(":id")
-    async deleteOrder(@GetUser() user, @Param() id: number){
-        await this.orderService.deleteOrder(user,id);
+    async deleteOrder(@GetUser() user, @Param('id') id: number){
+        return await this.orderService.deleteOrder(user,id);
+    }
+
+    
+    @Get(":id")
+    async getOrder(@GetUser() user, @Param('id') id: number){
+        return await this.orderService.getOrderById(user,id);
     }
 }

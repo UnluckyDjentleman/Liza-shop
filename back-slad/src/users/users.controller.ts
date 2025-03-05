@@ -15,11 +15,4 @@ export class UsersController {
     async getMe(@GetUser() user){
         return await this.userService.GetMe(user);
     }
-
-    @UseGuards(RolesGuard)
-    @Role('admin')
-    @Get('all-users')
-    async getAllUsers(){
-        return await this.userService.GetAllUsers();
-    }
 }

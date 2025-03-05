@@ -17,7 +17,7 @@ export class ProductsController {
     }
 
     @Get(":id")
-    async getProductById(@Param() id: string){
+    async getProductById(@Param('id') id: string){
         return await this.productService.getProductById(id);
     }
 
@@ -32,13 +32,13 @@ export class ProductsController {
     @Role('admin')
     @Patch()
     @Put(":id")
-    async updateProduct(@Param() id: string, @Body() body: UpdateProductsDTO){
+    async updateProduct(@Param('id') id: string, @Body() body: UpdateProductsDTO){
         return await this.productService.updateProduct(id, body);
     }
     @UseGuards(RolesGuard)
     @Role('admin')
     @Delete(":id")
-    async deleteProduct(@Param() id: string){
+    async deleteProduct(@Param('id') id: string){
         return await this.productService.deleteProduct(id);
     }
 }

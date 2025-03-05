@@ -15,7 +15,7 @@ export class OrdersService {
         if(!user) throw new UnauthorizedException("Для оформления заказа Вам необходимо зарегистрироваться или войти в аккаунт")
         const {product_id, quantity}=dto;
         const order=await this.supabaseService.getClient().from("orders").insert({
-            order_date: Date.now(),
+            order_date: new Date(),
             status: this.configService.get<string>("IN_CASE"),
             user_id: user.id,
         }).select();
@@ -43,7 +43,7 @@ export class OrdersService {
         if(orderToUpdate.data[0].user_id!==user.id) throw new ForbiddenException("Вы не можете обновить этот заказ!!! Ибо он не ваш");
         
         const updatedOrder=await this.supabaseService.getClient().from("orders").update({
-            order_date: Date.now(),
+            order_date: new Date(),
             status: this.configService.get<string>("UPDATED")
         }).eq('id',id);
         const updatedOrderItem=await this.supabaseService.getClient().from("order_items").update({
@@ -58,5 +58,15 @@ export class OrdersService {
         const {data, error}=await this.supabaseService.getClient().from("orders").delete().eq('id',id);
         if(error) throw new Error("Не удалось удалить заказ"+error.message)
         return data;
+    }
+
+    async getOrderById(user, id: number){
+        console.log("ID:"+id);
+        if(!user) throw new UnauthorizedException('Для данной операции зарегистируйтесь или войдите в свой аккаунт');
+        const orderNeeded:{data, error}=await this.supabaseService.getClient().from("order_items").select("id, quantity, orders(user_id), products(id, name, description, price)").eq('order_id',id);
+        console.log(orderNeeded.data[0].orders);
+        //Is this order belongs to user
+        if(orderNeeded.data[0].orders.user_id!==user.id) throw new ForbiddenException("Этот заказ не Ваш!");
+        return orderNeeded.data;
     }
 }

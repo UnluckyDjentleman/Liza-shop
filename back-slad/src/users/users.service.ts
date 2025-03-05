@@ -9,14 +9,4 @@ export class UsersService {
     async GetMe(user){
         return user;
     }
-
-    async GetAllUsers() {
-        const {data: {users}, error}=await this.supabaseService
-        .getClient().auth.admin.listUsers({
-            page: 1,
-            perPage: 1000,
-          });
-        if(error) throw new BadRequestException(error.message);
-        return users;
-    }
 }
