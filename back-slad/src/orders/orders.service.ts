@@ -62,11 +62,12 @@ export class OrdersService {
 
     async getOrderById(user, id: number){
         console.log("ID:"+id);
+        console.log(user.role);
         if(!user) throw new UnauthorizedException('Для данной операции зарегистируйтесь или войдите в свой аккаунт');
         const orderNeeded:{data, error}=await this.supabaseService.getClient().from("order_items").select("id, quantity, orders(user_id), products(id, name, description, price)").eq('order_id',id);
         console.log(orderNeeded.data[0].orders);
         //Is this order belongs to user
-        if(orderNeeded.data[0].orders.user_id!==user.id) throw new ForbiddenException("Этот заказ не Ваш!");
+        if(orderNeeded.data[0].orders.user_id!==user.id&&user.role!=='admin') throw new ForbiddenException("Этот заказ не Ваш!");
         return orderNeeded.data;
     }
 }
