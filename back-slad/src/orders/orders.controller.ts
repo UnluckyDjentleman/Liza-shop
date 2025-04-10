@@ -34,7 +34,7 @@ export class OrdersController {
     }
 
     
-    @Get(":id")
+    @Get("order/:id")
     async getOrder(@GetUser() user, @Param('id') id: number){
         return await this.orderService.getOrderById(user,id);
     }

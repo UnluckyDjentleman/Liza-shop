@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CustomerDTO } from 'src/customers/dto/customer.dto';
 import { OrdersService } from 'src/orders/orders.service';
@@ -8,7 +8,7 @@ import Stripe from 'stripe';
 
 @Injectable()
 export class StripeService {
-    private stripe: Stripe;
+  @Inject('STRIPE_CLIENT') private stripe: Stripe;
 
   constructor(
     private configService: ConfigService,
@@ -46,10 +46,10 @@ export class StripeService {
           price_data: {
             currency: 'byn',
             product_data: {
-              name: neededOrder[0].products.name,
-              description: neededOrder[0].products.description.toString(),
+              name: neededOrder[0].products["name"],
+              description: neededOrder[0].products["description"].toString(),
             },
-            unit_amount: neededOrder[0].products.price*100,
+            unit_amount: neededOrder[0].products["price"]*100,
           },
           quantity: neededOrder[0].quantity,
         })),
@@ -61,7 +61,7 @@ export class StripeService {
       console.log(session.payment_status);
 
       if(session.payment_status==="paid"){
-        await this.paymentService.saveThePayment(lineItems[0], neededOrder[0].products.price*neededOrder[0].quantity);
+        await this.paymentService.saveThePayment(lineItems[0], neededOrder[0].products["price"]*neededOrder[0].quantity);
       }
 
       return {id: session.id}

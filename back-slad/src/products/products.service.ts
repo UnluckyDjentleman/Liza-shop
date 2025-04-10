@@ -38,7 +38,7 @@ export class ProductsService {
     }
     async getProducts(filter: ProdQueryDto){
         const {name, category_id, customer_id}=filter;
-        let query=this.supabaseService.getClient().from("products").select('*');
+        let query=this.supabaseService.getClient().from("products").select('id, name, description, price, photo, category: categories(name), customer: customers(name)');
         if(name){
             query=query.ilike("name",`${name}`)
         }
@@ -53,7 +53,7 @@ export class ProductsService {
         return data;
     }
     async getProductById(id: string){
-        const {data, error}=await this.supabaseService.getClient().from("products").select('*').eq('id',id);
+        const {data, error}=await this.supabaseService.getClient().from("products").select('id, name, description, price, photo, category: categories(name), customer: customers(name)').eq('id',id);
         if (error) throw new NotFoundException(`Cannot find product with ID ${id}`);
         return data;
     }

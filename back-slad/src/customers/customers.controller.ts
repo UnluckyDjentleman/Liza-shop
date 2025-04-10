@@ -6,12 +6,17 @@ import { Role } from 'src/auth/decorator/role.decorator';
 import { CustomersService } from './customers.service';
 import { UpdateCustomerDTO } from './dto/updateCustomer.dto';
 
-@UseGuards(JwtAuthGuard)
+
 @Controller('customers')
 export class CustomersController {
 
     constructor(private customerService: CustomersService){}
     
+    @Get()
+    async getAllCustomers(){
+        return await this.customerService.getCustomers()
+    }
+
     @UseGuards(RolesGuard)
     @Role('admin')
     @Post()

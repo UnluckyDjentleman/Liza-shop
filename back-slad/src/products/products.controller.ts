@@ -7,7 +7,7 @@ import { ProductDTO } from './dto/products.dto';
 import { Role } from 'src/auth/decorator/role.decorator';
 import { UpdateProductsDTO } from './dto/updateProduct.dto';
 
-@UseGuards(JwtAuthGuard)
+//@UseGuards(JwtAuthGuard)
 @Controller('products')
 export class ProductsController {
     constructor(private productService: ProductsService){}

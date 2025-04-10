@@ -1,4 +1,5 @@
 import { IsNumber, IsString, IsUrl, IsUUID } from "class-validator";
+import {Type} from 'class-transformer'
 
 export class ProductDTO{
     @IsString()
@@ -14,6 +15,7 @@ export class ProductDTO{
     photo: string;
 
     @IsNumber()
+    @Type(()=>Number)
     category_id: number;
 
     @IsUUID()

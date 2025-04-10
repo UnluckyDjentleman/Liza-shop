@@ -8,6 +8,7 @@ import { StripeModule } from './stripe/stripe.module';
 import { SupabaseModule } from './supabase/supabase.module';
 import { ConfigModule } from '@nestjs/config';
 import { PaymentModule } from './payment/payment.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -23,7 +24,7 @@ import { PaymentModule } from './payment/payment.module';
     CustomersModule, 
     OrdersModule, 
     StripeModule, 
-    SupabaseModule, PaymentModule
+    SupabaseModule, PaymentModule, CategoriesModule
   ],
   controllers: [],
   providers: [],
