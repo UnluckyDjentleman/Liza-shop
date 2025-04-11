@@ -55,6 +55,6 @@ export class ProductsService {
     async getProductById(id: string){
         const {data, error}=await this.supabaseService.getClient().from("products").select('id, name, description, price, photo, category: categories(name), customer: customers(name)').eq('id',id);
         if (error) throw new NotFoundException(`Cannot find product with ID ${id}`);
-        return data;
+        return data[0];
     }
 }

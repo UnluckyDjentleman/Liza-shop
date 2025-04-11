@@ -71,7 +71,7 @@ export class OrdersService {
 
     async getUserOrders(user){
         if(!user) throw new UnauthorizedException('Для данной операции зарегистируйтесь или войдите в свой аккаунт');
-        const {data, error}=await this.supabaseService.getClient().from("order_items").select("id, quantity, orders(user_id), products(id, name, description, price)").eq('orders.user_id',user.id);
+        const {data, error}=await this.supabaseService.getClient().from("order_items").select("id, quantity, orders(user_id), products(id, name, photo, price)").eq('orders.user_id',user.id);
         console.log(data);
         //Is this order belongs to user
         if(data[0].orders["user_id"]!==user.id) throw new ForbiddenException("Этот заказ не Ваш!");
@@ -80,7 +80,7 @@ export class OrdersService {
 
     async getAllOrders(user){
         if(!user) throw new UnauthorizedException('Для данной операции зарегистируйтесь или войдите в свой аккаунт');
-        const orderNeeded:{data, error}=await this.supabaseService.getClient().from("order_items").select("id, quantity, orders(user_id), products(id, name, description, price)");
+        const orderNeeded:{data, error}=await this.supabaseService.getClient().from("order_items").select("id, quantity, orders(user_id), products(id, name, photo, price)");
         //Is this order belongs to user
         if(user.role!=='admin') throw new ForbiddenException("Этот заказ не Ваш!");
         return orderNeeded.data;
